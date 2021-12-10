@@ -1,0 +1,19 @@
+<div class="c2">
+<h1>Checkout</h1>
+
+    <% if @payment.errors.any? %>
+        <% @payment.errors.full_messages.each do |message| %>
+            <div class="alert alert-danger" role="alert">
+                <%= message%>
+            </div>
+        <% end %>
+    <% end %>
+
+<%= form_for @payment, url: payments_path do |f|%>
+    <h5>Your total is:</h5>
+    <div>
+         $ <%= @products.sum(&:price)%>
+    </div>
+    <br>
+  <%= f.submit 'Pay now', class: 'btn btn-outline-primary btn-rounded'%>
+<% end %>
