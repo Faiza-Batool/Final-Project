@@ -1,0 +1,34 @@
+<%= link_to "⏎", :back %>
+<div class = "container">
+    <br>
+    <h3><%= @brand.title%></h3>
+    <br>
+    <div class="row">
+        
+        <div class="card-deck">
+            <% @types.each do |type| %>
+                 <!-- Card -->
+                <div class="col-sm">
+                    <div class="card mb-4">
+                        <div class="view overlay">
+                            <% if(type.title == "Tablet" ) %>
+                                <img class="card-img-top" src="/assets/tablet.jpg" alt="Tablet" width = "100px" height= "150px" >
+                                <div class="mask rgba-white-slight"></div>
+                            <% elsif type.title == "Laptop" %>
+                                <img class="card-img-top" src="/assets/laptop.jpg" alt="Laptop" width = "100px" height= "150px">
+                                <div class="mask rgba-white-slight"></div>
+                            <% elsif type.title == "Cell Phone" %>
+                                <img class="card-img-top" src="/assets/phone.jpg" alt="Phone" width = "100px" height= "150px">
+                                <div class="mask rgba-white-slight"></div>
+                            <% end %>
+                        </div>
+                        <div class="card-body" align = "center">
+                            <%= link_to(type.title, type_path(type.id) ,class:"card-title", align: "center") %>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+            <% end %>      
+        </div>
+    </div>
+</div>

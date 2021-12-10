@@ -1,0 +1,10 @@
+<br>
+<div class="c2">
+<% @brands.each do |brand|%>
+    
+    <%= link_to(brand.title, brand_path(brand.id)) %>
+    
+    <br>
+<% end %>
+
+</div>

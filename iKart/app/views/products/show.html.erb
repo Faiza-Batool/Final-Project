@@ -1,0 +1,234 @@
+<%= link_to "⏎", :back %>
+
+<div class="c2">
+  <h2 ><%= @product.name%></h2>
+    <div class="d-flex justify-content-between" style="border:gray; border-width:1px; border-style: inset; border-radius: 5px; padding: 5px;" >
+      <div>
+        
+        <img src="<%= @product.image_url%>" alt="image" height="300px" weidth = "200px"  style="border:gray; border-width:1px; border-style: inset; border-radius: 5px;">
+      </div>
+
+      <div>
+      <br><br><br>
+
+       <div>Price: $<%= @product.price%></div>
+      
+        <hr/>
+        <% if @like.present? %>
+            <%= link_to image_tag("/assets/heart-fill.svg"), like_path(@like), method: :delete, align:"center" %>
+        <% else %>
+            <%= link_to image_tag("/assets/heart.svg"), product_likes_path(@product), method: :post, align:"center" %>
+        <% end %>
+        <hr/>
+        
+         <% if @cart.present? %>
+          <%= form_with url: cart_items_url(@cart),method: :post do |form| %>
+            <input type="hidden" value="<%= @product.id%>" name="product_id">
+            <input type="submit" value='Add to Cart' class="btn btn-outline-primary btn-rounded" >
+          <% end %>
+
+        <% else %>
+          <%= form_with url: '/auth_redirect',method: :get do |form| %>
+            <input type="hidden" value="<%= @product.id%>" name="product_id">
+            <input type="submit" value='Add to Cart' class="btn btn-outline-primary btn-rounded" >
+           <% end %>
+        <% end %>
+        
+      </div>
+        
+    </div>
+    <br>
+    <hr/>
+    <br>
+    <h3 >Description:</h3>
+    <br>
+    <p style="margin: 10px"><%= @product.description%></p>
+ <br>
+
+ <h3>Reviews:</h3> 
+
+  <% @reviews.each do |review| %>
+   <br>
+        <%= review.body %>
+        <br>
+        <small>
+         Rating: <%= review.rating %>%
+         </small>
+        &nbsp;
+        <small>
+              <%= link_to("Edit", edit_product_review_path(@product.id, review)) %>
+        </small>
+        &nbsp;
+        <% if can?(:crud, review) %>
+          <small> 
+            <%= link_to 'Delete', product_review_path(@product.id, review.id), method: :delete, data:{confirm: "Are you sure?"}%>
+          </small> 
+        <% end %>
+        <br>
+   <% end %>
+  <br>
+
+  <h5>Write review:</h5>
+  <br>
+   
+  <%= form_with(model:[@product,@review]) do |form| %>
+
+      <% if @review && @review.errors.any? %>
+            <% @review.errors.full_messages.each do |message|%></p>
+            <div class="alert alert-warning" role="alert"> 
+                <%= message%>
+              </div>
+            <% end %>
+      <% end %>
+    
+      <div class="form-outline mb-4">
+      <%= form.text_area :body, class:"form-control", id:"form4Example3", rows:"4", columns: "5",placeholder:"Write Review here"%>
+      </div>
+
+     <div class="form-outline mb-4">
+      <%= form.text_field :rating, type:"text", id:"form4Example1", class:"form-control",placeholder:"Rating" %>
+    </div>
+    
+    <%= form.submit "Review" ,class:"btn btn-outline-primary btn-rounded" %>
+<% end %>
+  <br>
+    <br>
+      
+  <center>
+    <h3>You might also like:</h3> 
+  </center>
+
+<link href="https://v4-alpha.getbootstrap.com/assets/css/docs.min.css" rel="stylesheet"/>
+<!--
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" rel="stylesheet"/>
+-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js"></script>
+<script src="https://cdn.rawgit.com/imsky/holder/master/holder.js"></script>
+
+<div class="container">
+
+<div class="bd-example">
+
+<div id="carousel-example-generic" class="carousel multi slide" data-ride="carousel" data-itemcount-l="4" data-itemcount-m="3" data-itemcount-s="2" autostart="0">
+  <ol class="carousel-indicators">
+    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+  </ol>
+  <div class="carousel-inner" role="listbox">
+  
+    <% @products.each do |product|   %>
+        <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
+          <img src="<%= product.image_url%>" alt="image" class="card-img-top" class="img-fluid" width = "100px" height= "150px" style="border: light_gray; border-width:1px; border-style: inset; border-radius: 5px;"  >               
+          <%= link_to(product.name, product_path(product.id), align:'center') %>
+        </div>
+    <%end%>
+  
+  </div>
+  <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev" >
+    <span class="icon-prev" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+  <!--
+    <svg xmlns="http://www.w3.org/2000/svg' width="16" height="16" fill="currentColor" class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16">
+      <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
+    </svg>
+ -->
+    <span class="icon-next" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+</div>
+
+  <script>
+      (function ($) {
+        function calcStepSize(optionNode) {
+          var breakM = 990; 
+          var breakS = 768; 
+          
+          var width = $(window).innerWidth();
+          
+          if(width < breakS) {
+            var key = 's';
+          } else if(width < breakM) {
+            key = 'm';
+          } else {
+            key = 'l';
+          }
+          
+          var cnt = 1*optionNode.data("itemcount-"+key);
+          
+          return cnt > 0? cnt : 1;
+        }
+
+        function repartition(container, items, count) {
+          container.children().remove();
+          
+          for(var i = 0; i < items.length; i++) {
+            var cBlock = $('<div class="carousel-item" ></div').appendTo(container);
+            var cInnerBlock = $('<div class="row"></div>').appendTo(cBlock);
+                      
+            for(var j = 0; j < count; j++) {
+              var cIdx = (i + j) % items.length;
+              
+              cInnerBlock.append($(items.get(cIdx)).clone());
+            }
+          }
+          
+          container.children().first().addClass("active");
+        }
+        
+        $('.carousel.multi').each(function(idx, El) {
+          var carousel = $(El);
+          var container = carousel.find('.carousel-inner');
+          
+          if(!container.children().first().hasClass('carousel-item')) {
+            var items = container.children().clone();
+
+            var lastSize = calcStepSize(carousel);
+            repartition(container, items, lastSize);
+
+            $(window).resize(function () {
+              var cSize = calcStepSize(carousel);
+
+              if(cSize != lastSize) {
+                repartition(container, items, cSize);
+                lastSize = cSize;
+              }
+            }); 
+          } else {
+            container.children().first().addClass("active");
+          }
+          
+          carousel.carousel({
+            interval: false
+          });
+        });
+
+      }(jQuery));       
+  </script>
+  
+  <script>
+    $('#mySlider').on('slide.bs.carousel', function (e) {
+      var $e = $(e.relatedTarget);
+      $e.removeClass('active-next');
+
+      var $next = $e.next();
+      if ($next.length===0){
+          $next = $('.carousel-item').eq(0);
+      }
+      var $nextnext = $e.next().next();
+      if ($nextnext.length===0){
+          $nextnext = $('.carousel-item').eq(1);
+      }
+      $next.addClass('active-next');
+      $nextnext.addClass('active-next');
+    });
+    </script>
+ 
+
+</div>
+</div>
